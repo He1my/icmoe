@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import urllib.request
 from enum import Enum
 import netifaces as ni
