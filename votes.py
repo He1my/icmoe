@@ -66,6 +66,7 @@ def getVotes():
 
 
 class status(Enum):
+    Error = 0
     VoteAdded = 1
     IpUsedBefore = 2
     OtherError = 3
