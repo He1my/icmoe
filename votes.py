@@ -11,12 +11,9 @@ import http.client
 
 def main():
     for x in range(1, 10):
-        ip = ChangeIP()
-        st = vote(ip)
+        st = vote('547')
         print(st)
-        if st == status.VoteAdded or st == status.IpUsedBefore:
-            with open('usedIps.txt', 'a') as myfile:
-                myfile.write(ip + '\n')
+
 
 
 def ChangeIP():
@@ -77,23 +74,13 @@ class NoRedirection(urllib.request.HTTPErrorProcessor):
     https_response = http_response
 
 
-class BoundHTTPHandler(urllib.request.HTTPHandler):
 
-    def __init__(self, source_address=None, debuglevel=0):
-        urllib.request.HTTPHandler.__init__(self, debuglevel)
-        self.http_class = functools.partial(http.client.HTTPConnection, source_address=source_address)
-
-    def http_open(self, req):
-        return self.do_open(self.http_class, req)
-
-
-def vote(ip):
+def vote(id):
 
     response = None
 
     try:
-        handler = BoundHTTPHandler(source_address=("192.168.1.100", 0))
-        opener = urllib.request.build_opener(NoRedirection, handler)
+        opener = urllib.request.build_opener(NoRedirection)
         urllib.request.install_opener(opener)
         req = urllib.request.Request("http://www.ichaps.org/voting/test2.php")
 
@@ -104,8 +91,9 @@ def vote(ip):
         req.add_header("Referer", "http://www.ichaps.org/voting/medalofexcellence.php")
         req.add_header("Connection", "keep-alive")
         req.add_header("Content-Type", "application/x-www-form-urlencoded")
+        req.add_header("X-Forwarded-For", str(random.randrange(1,254)) + '.' +  str(random.randrange(1,254)) + '.' +  str(random.randrange(1,254)) + '.' + str(random.randrange(1,254)) )
 
-        data = b"trainers=412"
+        data = urllib.parse.urlencode({'trainers': id})
         response = urllib.request.urlopen(req, data)
 
     except urllib.error.URLError as e:
