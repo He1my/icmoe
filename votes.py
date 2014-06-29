@@ -5,12 +5,21 @@ from enum import Enum
 import time
 import functools
 import http.client
+import random
 
 
 def main():
-    for x in range(1, 10):
-        st = vote('547')
-        print(st)
+    count = 0
+    while True:
+        print(vote('418')) # Dr. Tareq Suwaidan
+#        print(vote('383')) # Mahdi Elmandjra
+        print(vote('626')) # Dr. Ashraf Abd Al-aziz Mansour
+        print(vote('378')) # Dr. Gihan Gamal
+        count += 1
+        print(count)
+#        print(vote(''))
+#        print(vote(''))
+        time.sleep(90)
 
 
 
@@ -45,15 +54,16 @@ def vote(id):
         req.add_header("Content-Type", "application/x-www-form-urlencoded")
         req.add_header("X-Forwarded-For", str(random.randrange(1,254)) + '.' +  str(random.randrange(1,254)) + '.' +  str(random.randrange(1,254)) + '.' + str(random.randrange(1,254)) )
 
-        data = urllib.parse.urlencode({'trainers': id})
+        data = urllib.parse.urlencode({'trainers': id}).encode('utf-8')
         response = urllib.request.urlopen(req, data)
-
     except urllib.error.URLError as e:
         if not hasattr(e, "code"):
             status.OtherError
         response = e
+        print(e)
     except Exception as e:
         status.OtherError
+        print(e)
 
     if response.headers['location'] == 'erorrpage.php':
         return status.IpUsedBefore
