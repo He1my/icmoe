@@ -2,8 +2,6 @@
 
 import urllib.request
 from enum import Enum
-import netifaces as ni
-from subprocess import call
 import time
 import functools
 import http.client
@@ -13,52 +11,6 @@ def main():
     for x in range(1, 10):
         st = vote('547')
         print(st)
-
-
-
-def ChangeIP():
-    usedIp = True
-    ip = ''
-    while usedIp:
-        ip = restartPPPOE()
-        print(ip)
-        usedIp = False
-        with open('usedIps.txt') as f:
-            for line in f:
-                if ip in line:
-                    usedIp = True
-                    print('network IP used before.')
-                    break
-    return ip
-
-
-def restartPPPOE():
-    call(["poff", "tedata"])
-    call(["pon", "tedata"])
-    ip = ''
-    for x in range(1, 100):
-        time.sleep(0.1)
-        ip = getip()
-        if ip != '':
-            break
-        print(x)
-        if x == 10:
-            print("error: unable to connect to PPPOE")
-            return ''
-    return ip
-
-
-def getip():
-    ip = ''
-    try:
-        ip = ni.ifaddresses('ppp0')[2][0]['addr']
-    except:
-        pass
-    return ip
-
-
-def getVotes():
-    return 0
 
 
 
