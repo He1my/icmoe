@@ -56,6 +56,10 @@ def vote(id):
 
         data = urllib.parse.urlencode({'trainers': id}).encode('utf-8')
         response = urllib.request.urlopen(req, data)
+        if response.headers['location'] == 'erorrpage.php':
+            return status.IpUsedBefore
+        if response.headers['location'] == 'medalofexcellence.php':
+            return status.VoteAdded        
     except urllib.error.URLError as e:
         if not hasattr(e, "code"):
             status.OtherError
@@ -65,10 +69,7 @@ def vote(id):
         status.OtherError
         print(e)
 
-    if response.headers['location'] == 'erorrpage.php':
-        return status.IpUsedBefore
-    if response.headers['location'] == 'medalofexcellence.php':
-        return status.VoteAdded
+
 
     return status.OtherError
 
